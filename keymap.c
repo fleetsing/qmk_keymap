@@ -22,29 +22,17 @@
 
 enum charybdis_keymap_layers {
     LAYER_BASE = 0,
-    LAYER_FUNCTION,
-    LAYER_NAVIGATION,
-    LAYER_MEDIA,
-    LAYER_POINTER,
     LAYER_NUMERAL,
-    LAYER_SYMBOLS,
+    LAYER_NAVIGATION,
+    LAYER_POINTER,
     LAYER_AUTOMOUSE,
+    LAYER_MEDIA,
+    LAYER_FUNCTION,
+    LAYER_SYMBOLS,
 };
 
 // Automatically enable sniping-mode on the pointer layer.
 #define CHARYBDIS_AUTO_SNIPING_ON_LAYER LAYER_POINTER
-
-#ifdef CHARYBDIS_AUTO_POINTER_LAYER_TRIGGER_ENABLE
-static uint16_t auto_pointer_layer_timer = 0;
-
-#    ifndef CHARYBDIS_AUTO_POINTER_LAYER_TRIGGER_TIMEOUT_MS
-#        define CHARYBDIS_AUTO_POINTER_LAYER_TRIGGER_TIMEOUT_MS 1000
-#    endif // CHARYBDIS_AUTO_POINTER_LAYER_TRIGGER_TIMEOUT_MS
-
-#    ifndef CHARYBDIS_AUTO_POINTER_LAYER_TRIGGER_THRESHOLD
-#        define CHARYBDIS_AUTO_POINTER_LAYER_TRIGGER_THRESHOLD 8
-#    endif // CHARYBDIS_AUTO_POINTER_LAYER_TRIGGER_THRESHOLD
-#endif     // CHARYBDIS_AUTO_POINTER_LAYER_TRIGGER_ENABLE
 
 #define ESC_MED LT(LAYER_MEDIA, KC_ESC)
 #define SPC_NAV LT(LAYER_NAVIGATION, KC_SPC)
@@ -53,6 +41,9 @@ static uint16_t auto_pointer_layer_timer = 0;
 #define ENT_SYM LT(LAYER_SYMBOLS, KC_ENT)
 #define BSP_NUM LT(LAYER_NUMERAL, KC_BSPC)
 #define _L_PTR(KC) LT(LAYER_POINTER, KC)
+
+#define MO_FUN MO(LAYER_FUNCTION)
+#define OSM_SFT OSM(MOD_LSFT)
 
 #ifndef POINTING_DEVICE_ENABLE
 #    define DRGSCRL KC_NO
@@ -67,7 +58,7 @@ static uint16_t auto_pointer_layer_timer = 0;
     KC_ESC,     KC_J,       KC_M,       KC_W,       KC_Z,       KC_X,       KC_Q,       KC_SCLN,    KC_QUOT,    KC_LBRC,    \
     KC_N,       KC_R,       KC_T,       KC_S,       KC_G,       KC_P,       KC_H,       KC_A,       KC_E,       KC_I,       \
     KC_B,       KC_L,       KC_D,       KC_C,       KC_V,       KC_K,       KC_F,       KC_O,       KC_U,       KC_Y,       \
-                            SPC_NAV,    XXXXXXX,    ENT_NUM,    ENT_SYM,    BSP_NUM
+                            SPC_NAV,    XXXXXXX,    ENT_NUM,    MO_FUN,     OSM_SFT
 
 /** Convenience row shorthands. */
 #define ________________________DEAD_HALF_ROW_____________________  XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX
@@ -113,16 +104,16 @@ static uint16_t auto_pointer_layer_timer = 0;
 /** \brief Mouse emulation and pointer functions. */
 #define LAYOUT_LAYER_POINTER                                                                                                \
     QK_BOOT,    EE_CLR,     XXXXXXX,    DPI_MOD,    S_D_MOD,    S_D_MOD,    DPI_MOD,    XXXXXXX,    EE_CLR,     QK_BOOT,    \
-    _______________________HOME_ROW_GACS_L____________________, XXXXXXX,    MS_BTN1,    MS_BTN2,    XXXXXXX,    XXXXXXX,    \
+    KC_LSFT,    KC_LCTL,    KC_LALT,    KC_LGUI,    XXXXXXX,    XXXXXXX,    MS_BTN1,    MS_BTN2,    XXXXXXX,    XXXXXXX,    \
     _______,    DRGSCRL,    SNIPING,    XXXXXXX,    XXXXXXX,    XXXXXXX,    XXXXXXX,    SNIPING,    DRGSCRL,    _______,    \
                             MS_BTN1,    XXXXXXX,    MS_BTN2,    MS_BTN3,    MS_BTN1
 
 /** \brief Automatic mouse layer. */
 #define LAYOUT_LAYER_AUTOMOUSE                                                                                              \
     _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    \
-    _______,    _______,    _______,    _______,    _______,    _______,    MS_BTN1,    MS_BTN2,    _______,    _______,    \
     _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    \
-                            MS_BTN1,    XXXXXXX,    MS_BTN2,    MS_BTN3,    MS_BTN1
+    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    \
+                            MS_BTN1,    XXXXXXX,    MS_BTN2,    MS_BTN2,    MS_BTN1
 
 /**
  * \brief Navigation layer.
@@ -243,8 +234,8 @@ void rgb_matrix_update_pwm_buffers(void);
 #ifdef POINTING_DEVICE_ENABLE
 bool set_scrolling = false;
 // Modify these values to adjust the scrolling speed
-#define SCROLL_DIVISOR_H 60.0
-#define SCROLL_DIVISOR_V 60.0
+#define SCROLL_DIVISOR_H 100.0
+#define SCROLL_DIVISOR_V 100.0
 
 // Variables to store accumulated scroll values
 float scroll_accumulated_h = 0;
